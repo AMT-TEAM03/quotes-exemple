@@ -3,9 +3,9 @@ package ch.heig.quotes.api.entities;
 
 import jakarta.persistence.*;
 
-@Entity(name = "ItemAndSound")
-@Table(name = "items_and_sounds")
-public class ItemsAndSound {
+@Entity(name = "Item")
+@Table(name = "items")
+public class Items {
     @TableGenerator(name = "genItems",
             table = "idItems",
             pkColumnName = "name",
@@ -20,9 +20,9 @@ public class ItemsAndSound {
     private String sound;
 
 
-    public ItemsAndSound(){}
+    public Items(){}
 
-    public ItemsAndSound(int id, String name, String sound) {
+    public Items(int id, String name, String sound) {
         this.id = id;
         this.name = name;
         this.sound = sound;
