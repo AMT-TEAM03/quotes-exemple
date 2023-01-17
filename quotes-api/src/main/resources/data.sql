@@ -1,4 +1,6 @@
-insert into quotes values (1,'Dr. Seuss', 'Don''t cry because it''s over, smile because it happened.');
-insert into quotes values (2,'Oscar Wilde', 'Be yourself; everyone else is already taken.');
-insert into quotes values (3,'Albert Einstein', 'Two things are infinite: the universe and human stupidity; and I''m not sure about the universe.');
- 
+insert into items values (1,'Tournevis', 'Glang');
+insert into items values (2,'Coussin', 'Pouf');
+insert into items values (3,'Grelot', 'Gling');
+
+insert into items
+insert into sound (1, 2, [1, 2, 3])

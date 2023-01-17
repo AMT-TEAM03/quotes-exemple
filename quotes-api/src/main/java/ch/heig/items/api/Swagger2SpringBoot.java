@@ -1,4 +1,4 @@
-package ch.heig.quotes.api;
+package ch.heig.items.api;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.ExitCodeGenerator;

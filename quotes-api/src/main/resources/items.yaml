@@ -1,0 +1,183 @@
+openapi: "3.0.3"
+info:
+  title: Api Documentation
+  description: Api Documentation
+  version: '1.0'
+servers:
+  - url: 'http://localhost:9090/api'
+tags:
+  - name: Items-end-point
+    description: Gestion des items
+paths:
+  /items:
+    get:
+      tags:
+        - Items-end-point
+      summary: Obtient une liste de tous les items
+      operationId: getItems
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+        '404':
+          description: Not Found
+    post:
+      tags:
+        - Items-end-point
+      summary: Ajoute un nouvel item
+      operationId: addItem
+      requestBody:
+        content:
+          'application/json':
+            schema:
+              $ref: '#/components/schemas/Item'
+      responses:
+        '201':
+          description: item créé
+          headers:
+            Location:
+              description: URL de l'item créé
+              schema:
+                type: string
+                format: uri
+  /items/{id}:
+    get:
+      tags:
+        - Items-end-point
+      summary: Obtient un item
+      operationId: getItem
+      parameters:
+        - name: id
+          in: path
+          description: numéro de l'item à obtenir
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Item'
+        '404':
+          description: Not Found
+      deprecated: false
+    put:
+      tags:
+        - Items-end-point
+      summary: Mets a jour un item
+      operationId: putItem
+      parameters:
+        - name: id
+          in: path
+          description: id de l'item a mettre a jour
+          required: true
+          schema:
+              type: integer
+              format: int32
+        - name: name
+          in: query
+          description: nouveau nom de l'item
+          required: true
+          schema:
+            type: string
+        - name: sound
+          in: query
+          description: nouveau son de l'item
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Item'
+        '404':
+          description: Not Found
+      deprecated: false
+    patch:
+      tags:
+        - Items-end-point
+      summary: Mets a jour un item
+      operationId: patchItem
+      parameters:
+        - name: id
+          in: path
+          description: id de l'item a mettre a jour
+          required: true
+          schema:
+            type: integer
+            format: int32
+        - name: name
+          in: query
+          description: nouveau nom de l'item
+          required: false
+          schema:
+            type: string
+        - name: sound
+          in: query
+          description: nouveau son de l'item
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Item'
+        '404':
+          description: Not Found
+      deprecated: false
+components:
+  schemas:
+    Item:
+      description: toutes les caractéristiques d'un item
+      type: object
+      properties:
+        id:
+          description: numéro auto-incrémenté de l'item
+          type: integer
+          format: int32
+        name:
+          description: nom de l'item
+          type: string
+        soundFrotte:
+          description: son que l'item produit quand on le frotte
+          $ref: '#/components/schemas/Sound'
+        soundsTape:
+          description: sons que l'item produit quand on le tape
+          type: array
+          items:
+            $ref: '#/components/schemas/Sound'
+        soundsTombe:
+          description: sons que l'item produit quand il tombe
+          type: array
+          items:
+            $ref: '#/components/schemas/Sound'
+      title: Item
+    Sound:
+      description: toutes les caractéristiques d'un son
+      type: object
+      properties:
+        id:
+          description: numéro auto-incrémenté du son
+          type: integer
+          format: int32
+        sound:
+          description: onomatopee representant le son
+          type: string
+        item:
+          description: item qui produit ce son lorsqu'on le tape
+          $ref: '#/components/schemas/Item'
+      title: Sound
