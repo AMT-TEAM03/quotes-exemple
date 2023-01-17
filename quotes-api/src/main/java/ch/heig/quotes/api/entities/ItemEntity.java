@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 
 @Entity(name = "Item")
 @Table(name = "items")
-public class Items {
+public class ItemEntity {
     @TableGenerator(name = "genItems",
             table = "idItems",
             pkColumnName = "name",
@@ -20,9 +20,9 @@ public class Items {
     private String sound;
 
 
-    public Items(){}
+    public ItemEntity(){}
 
-    public Items(int id, String name, String sound) {
+    public ItemEntity(int id, String name, String sound) {
         this.id = id;
         this.name = name;
         this.sound = sound;

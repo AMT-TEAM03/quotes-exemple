@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface QuoteRepository extends JpaRepository<QuoteEntity, Integer> {
     QuoteEntity findById(int id);
-    List<QuoteEntity> findByAuthorLike(String pattern);}
+    List<QuoteEntity> findByAuthorLike(String pattern);
+}
