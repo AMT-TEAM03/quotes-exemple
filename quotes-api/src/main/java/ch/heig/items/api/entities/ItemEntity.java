@@ -19,7 +19,6 @@ public class ItemEntity {
             allocationSize = 100)
     @Id // @GeneratedValue
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "genItems")
-
     private int id;
     private String name;
 
@@ -31,8 +30,8 @@ public class ItemEntity {
 
     @ManyToMany
     @JoinTable( name = "ITEMS_SOUNDS_ASSOCIATION",
-            joinColumns = @JoinColumn( name = "idItem" ),
-            inverseJoinColumns = @JoinColumn( name = "idSound" ) )
+            joinColumns = @JoinColumn( name = "idSound" ),
+            inverseJoinColumns = @JoinColumn( name = "idItem" ) )
     private List<SoundEntity> soundsTombe = new ArrayList<>();
 
     public ItemEntity(){}

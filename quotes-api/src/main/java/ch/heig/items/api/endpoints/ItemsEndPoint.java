@@ -6,6 +6,7 @@ import ch.heig.items.api.exceptions.ItemNotFoundException;
 import ch.heig.items.api.repositories.ItemRepository;
 import org.openapitools.api.ItemsApi;
 import org.openapitools.model.Item;
+import org.openapitools.model.Sound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,14 +31,33 @@ public class ItemsEndPoint implements ItemsApi {
         for(ItemEntity itemEntity : itemsEntities){
             items.add(itemEntity.toItem());
         }
-        return new ResponseEntity<List<Item>>(items, HttpStatus.OK);
+        return new ResponseEntity<>(items, HttpStatus.OK);
     }
 
     @Override
     public ResponseEntity<Void> addItem(@RequestBody Item item){
         ItemEntity itemEntity = new ItemEntity();
         itemEntity.setName(item.getName());
-        itemEntity.setSoundFrotte(item.getSoundFrotte());
+        SoundEntity soundFrotte = new SoundEntity();
+        soundFrotte.setId(item.getSoundFrotte().getId());
+        soundFrotte.setSound(item.getSoundFrotte().getSound());
+        itemEntity.setSoundFrotte(soundFrotte);
+        List<SoundEntity> soundsTape = new ArrayList<>();
+        for(Sound sound : item.getSoundsTape()){
+            SoundEntity tmpSound = new SoundEntity();
+            tmpSound.setId(sound.getId());
+            tmpSound.setSound(sound.getSound());
+            soundsTape.add(tmpSound);
+        }
+        itemEntity.setSoundsTape(soundsTape);
+        List<SoundEntity> soundsTombe = new ArrayList<>();
+        for(Sound sound : item.getSoundsTombe()){
+            SoundEntity tmpSound = new SoundEntity();
+            tmpSound.setId(sound.getId());
+            tmpSound.setSound(sound.getSound());
+            soundsTombe.add(tmpSound);
+        }
+        itemEntity.setSoundsTombe(soundsTombe);
         ItemEntity itemAdded = itemRepository.save(itemEntity);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()

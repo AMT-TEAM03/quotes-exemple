@@ -152,7 +152,32 @@ components:
         name:
           description: nom de l'item
           type: string
+        soundFrotte:
+          description: son que l'item produit quand on le frotte
+          $ref: '#/components/schemas/Sound'
+        soundsTape:
+          description: sons que l'item produit quand on le tape
+          type: array
+          items:
+            $ref: '#/components/schemas/Sound'
+        soundsTombe:
+          description: sons que l'item produit quand il tombe
+          type: array
+          items:
+            $ref: '#/components/schemas/Sound'
+      title: Item
+    Sound:
+      description: toutes les caractéristiques d'un son
+      type: object
+      properties:
+        id:
+          description: numéro auto-incrémenté du son
+          type: integer
+          format: int32
         sound:
-          description: son que l'item produit en tombant
+          description: onomatopee representant le son
           type: string
-      title: ItemEntity
+        item:
+          description: item qui produit ce son lorsqu'on le tape
+          $ref: '#/components/schemas/Item'
+      title: Sound

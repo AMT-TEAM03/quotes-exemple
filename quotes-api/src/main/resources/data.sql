@@ -1,6 +1,9 @@
-insert into items values (1,'Tournevis', 'Glang');
-insert into items values (2,'Coussin', 'Pouf');
-insert into items values (3,'Grelot', 'Gling');
+insert into items values (1,'Tournevis');
+insert into items values (2,'Coussin');
+insert into items values (3,'Grelot');
 
-insert into items
-insert into sound (1, 2, [1, 2, 3])
+-- insert into sounds values (1, 'Clang');
+-- insert into sounds values (2, 'Bang');
+-- insert into sounds values (3, 'Plouf');
+-- insert into sounds values (4, 'Badaboum');
+-- insert into sounds values (5, 'Paf');

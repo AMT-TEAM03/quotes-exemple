@@ -24,7 +24,7 @@
                             <goal>generate</goal>
                         </goals>
                         <configuration>
-                            <inputSpec>src/main/resources/quotes.yaml</inputSpec>
+                            <inputSpec>${basedir}/src/main/resources/items.yaml</inputSpec>
                             <generatorName>java</generatorName>
                         </configuration>
                     </execution>
