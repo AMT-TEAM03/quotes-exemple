@@ -123,4 +123,60 @@ public class ItemsEndPoint implements ItemsApi {
             throw new ItemNotFoundException(id);
         }
     }
+
+    @Override
+    public ResponseEntity<Item> patchItem(
+            Integer id,
+            String name,
+            Sound soundFrotte,
+            List<Sound> soundTape,
+            List<Sound> soundTombe
+    ) {
+        Optional<ItemEntity> opt = itemRepository.findById(id);
+        if(opt.isPresent()){
+            ItemEntity itemToUpdate = opt.get();
+            if(name != null)
+                itemToUpdate.setName(name);
+            if(soundFrotte != null){
+                SoundEntity newSoundFrotte = new SoundEntity();
+                newSoundFrotte.setId(soundFrotte.getId());
+                newSoundFrotte.setSound(soundFrotte.getSound());
+                itemToUpdate.setSoundFrotte(newSoundFrotte);
+            }
+            if(soundTape != null){
+                List<SoundEntity> newSoundTape = new ArrayList<>();
+                for(Sound sound : soundTape){
+                    SoundEntity tmpSound = new SoundEntity();
+                    tmpSound.setId(sound.getId());
+                    tmpSound.setSound(sound.getSound());
+                    newSoundTape.add(tmpSound);
+                }
+                itemToUpdate.setSoundsTape(newSoundTape);
+            }
+            if(soundTombe != null) {
+                List<SoundEntity> newSoundTombe = new ArrayList<>();
+                for (Sound sound : soundTombe) {
+                    SoundEntity tmpSound = new SoundEntity();
+                    tmpSound.setId(sound.getId());
+                    tmpSound.setSound(sound.getSound());
+                    newSoundTombe.add(tmpSound);
+                }
+                itemToUpdate.setSoundsTombe(newSoundTombe);
+            }
+            itemRepository.save(itemToUpdate);
+            Item updatedItem = new Item();
+            updatedItem.setId(itemToUpdate.getId());
+            updatedItem.setName(itemToUpdate.getName());
+            updatedItem.setSoundFrotte(itemToUpdate.getSoundFrotte().toSound());
+            List<Sound> newSoundTape = new ArrayList<>();
+            List<Sound> newSoundTombe = new ArrayList<>();
+            itemToUpdate.getSoundsTape().forEach(sound -> newSoundTape.add(sound.toSound()));
+            itemToUpdate.getSoundsTombe().forEach(sound -> newSoundTombe.add(sound.toSound()));
+            updatedItem.setSoundsTombe(newSoundTombe);
+            updatedItem.setSoundsTape(newSoundTape);
+            return new ResponseEntity<>(updatedItem, HttpStatus.OK);
+        }else{
+            throw new ItemNotFoundException(id);
+        }
+    }
 }

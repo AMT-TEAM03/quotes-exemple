@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface SoundRepository extends JpaRepository<SoundEntity, Integer> {
     SoundEntity findById(int id);
-    List<SoundEntity> findByNameLike(String pattern);
+    List<SoundEntity> findBySoundLike(String pattern);
 }
