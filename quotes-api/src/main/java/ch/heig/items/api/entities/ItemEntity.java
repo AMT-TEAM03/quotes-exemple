@@ -2,6 +2,7 @@ package ch.heig.items.api.entities;
 
 
 import jakarta.persistence.*;
+import org.openapitools.model.Item;
 import org.openapitools.model.Sound;
 
 import java.util.ArrayList;
@@ -71,4 +72,22 @@ public class ItemEntity {
     public void setSoundsTape(List<SoundEntity> soundsTape) { this.soundsTape = soundsTape; }
 
     public void setSoundsTombe(List<SoundEntity> soundsTombe) { this.soundsTombe = soundsTombe; }
+
+    public Item toItem(){
+        Item item = new Item();
+        item.setId(this.id);
+        item.setName(this.name);
+        item.setSoundFrotte(this.soundFrotte.toSound());
+        List<Sound> convertedSoundsTombe = new ArrayList<>();
+        this.soundsTombe.forEach(sound -> {
+            convertedSoundsTombe.add(sound.toSound());
+        });
+        List<Sound> convertedSoundsTape = new ArrayList<>();
+        this.soundsTombe.forEach(sound -> {
+            convertedSoundsTape.add(sound.toSound());
+        });
+        item.setSoundsTombe(convertedSoundsTombe);
+        item.setSoundsTape(convertedSoundsTape);
+        return item;
+    }
 }

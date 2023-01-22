@@ -1,6 +1,7 @@
 package ch.heig.items.api.entities;
 
 import jakarta.persistence.*;
+import org.openapitools.model.Sound;
 
 @Entity(name = "Sound")
 @Table(name = "sounds")
@@ -40,5 +41,13 @@ public class SoundEntity {
 
     public void setItem(ItemEntity item) {
         this.item = item;
+    }
+
+    public Sound toSound(){
+        Sound sound = new Sound();
+        sound.setSound(this.sound);
+        sound.setId(this.id);
+        sound.setItem(this.item.toItem());
+        return sound;
     }
 }

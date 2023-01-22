@@ -1,6 +1,7 @@
 package ch.heig.items.api.endpoints;
 
 import ch.heig.items.api.entities.ItemEntity;
+import ch.heig.items.api.entities.SoundEntity;
 import ch.heig.items.api.exceptions.ItemNotFoundException;
 import ch.heig.items.api.repositories.ItemRepository;
 import org.openapitools.api.ItemsApi;
@@ -27,13 +28,7 @@ public class ItemsEndPoint implements ItemsApi {
         List<ItemEntity> itemsEntities = itemRepository.findAll();
         List<Item> items = new ArrayList<>();
         for(ItemEntity itemEntity : itemsEntities){
-            Item item = new Item();
-            item.setId(itemEntity.getId());
-            item.setName(itemEntity.getName());
-//            item.setSoundFrotte(itemEntity.getSoundFrotte());
-//            item.setSoundsTape(itemEntity.getSoundsTape());
-//            item.setSoundsTombe(itemEntity.getSoundsTombe());
-            items.add(item);
+            items.add(itemEntity.toItem());
         }
         return new ResponseEntity<List<Item>>(items, HttpStatus.OK);
     }
@@ -42,7 +37,7 @@ public class ItemsEndPoint implements ItemsApi {
     public ResponseEntity<Void> addItem(@RequestBody Item item){
         ItemEntity itemEntity = new ItemEntity();
         itemEntity.setName(item.getName());
-//        itemEntity.setSound(item.getSound());
+        itemEntity.setSoundFrotte(item.getSoundFrotte());
         ItemEntity itemAdded = itemRepository.save(itemEntity);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -57,10 +52,7 @@ public class ItemsEndPoint implements ItemsApi {
         Optional<ItemEntity> opt = itemRepository.findById(id);
         if (opt.isPresent()) {
             ItemEntity itemEntity = opt.get();
-            Item item = new Item();
-            item.setId(itemEntity.getId());
-            item.setName(itemEntity.getName());
-//            item.setSound(itemEntity.getSound());
+            Item item = itemEntity.toItem();
             return new ResponseEntity<Item>(item, HttpStatus.OK);
         } else {
             throw new ItemNotFoundException(id);
