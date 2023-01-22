@@ -76,17 +76,23 @@ public class ItemEntity {
         Item item = new Item();
         item.setId(this.id);
         item.setName(this.name);
-        item.setSoundFrotte(this.soundFrotte.toSound());
-        List<Sound> convertedSoundsTombe = new ArrayList<>();
-        this.soundsTombe.forEach(sound -> {
-            convertedSoundsTombe.add(sound.toSound());
-        });
-        List<Sound> convertedSoundsTape = new ArrayList<>();
-        this.soundsTombe.forEach(sound -> {
-            convertedSoundsTape.add(sound.toSound());
-        });
-        item.setSoundsTombe(convertedSoundsTombe);
-        item.setSoundsTape(convertedSoundsTape);
+        if(this.soundFrotte != null){
+            item.setSoundFrotte(this.soundFrotte.toSound());
+        }
+        if(this.soundsTombe != null){
+            List<Sound> convertedSoundsTombe = new ArrayList<>();
+            this.soundsTombe.forEach(sound -> {
+                convertedSoundsTombe.add(sound.toSound());
+            });
+            item.setSoundsTombe(convertedSoundsTombe);
+        }
+        if(this.soundsTape != null){
+            List<Sound> convertedSoundsTape = new ArrayList<>();
+            this.soundsTombe.forEach(sound -> {
+                convertedSoundsTape.add(sound.toSound());
+            });
+            item.setSoundsTape(convertedSoundsTape);
+        }
         return item;
     }
 }

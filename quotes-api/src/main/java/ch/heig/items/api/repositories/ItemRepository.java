@@ -10,4 +10,5 @@ import java.util.List;
 public interface ItemRepository extends JpaRepository<ItemEntity, Integer> {
     ItemEntity findById(int id);
     List<ItemEntity> findByNameLike(String pattern);
+//    ItemEntity update
 }
