@@ -2,8 +2,10 @@ package ch.heig.items.api.endpoints;
 
 import ch.heig.items.api.entities.ItemEntity;
 import ch.heig.items.api.entities.SoundEntity;
+import ch.heig.items.api.exceptions.InvalidArgumentException;
 import ch.heig.items.api.exceptions.ItemNotFoundException;
 import ch.heig.items.api.repositories.ItemRepository;
+import ch.heig.items.api.repositories.SoundRepository;
 import org.openapitools.api.ItemsApi;
 import org.openapitools.model.Item;
 import org.openapitools.model.Sound;
@@ -23,6 +25,8 @@ import java.util.Optional;
 public class ItemsEndPoint implements ItemsApi {
     @Autowired
     private ItemRepository itemRepository;
+    @Autowired
+    private SoundRepository soundRepository;
 
     @Override
     public ResponseEntity<List<Item>> getItems(){
@@ -36,28 +40,7 @@ public class ItemsEndPoint implements ItemsApi {
 
     @Override
     public ResponseEntity<Void> addItem(@RequestBody Item item){
-        ItemEntity itemEntity = new ItemEntity();
-        itemEntity.setName(item.getName());
-        SoundEntity soundFrotte = new SoundEntity();
-        soundFrotte.setId(item.getSoundFrotte().getId());
-        soundFrotte.setSound(item.getSoundFrotte().getSound());
-        itemEntity.setSoundFrotte(soundFrotte);
-        List<SoundEntity> soundsTape = new ArrayList<>();
-        for(Sound sound : item.getSoundsTape()){
-            SoundEntity tmpSound = new SoundEntity();
-            tmpSound.setId(sound.getId());
-            tmpSound.setSound(sound.getSound());
-            soundsTape.add(tmpSound);
-        }
-        itemEntity.setSoundsTape(soundsTape);
-        List<SoundEntity> soundsTombe = new ArrayList<>();
-        for(Sound sound : item.getSoundsTombe()){
-            SoundEntity tmpSound = new SoundEntity();
-            tmpSound.setId(sound.getId());
-            tmpSound.setSound(sound.getSound());
-            soundsTombe.add(tmpSound);
-        }
-        itemEntity.setSoundsTombe(soundsTombe);
+        ItemEntity itemEntity = new ItemEntity().fromItem(item);
         ItemEntity itemAdded = itemRepository.save(itemEntity);
         URI uri = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -73,7 +56,7 @@ public class ItemsEndPoint implements ItemsApi {
         if (opt.isPresent()) {
             ItemEntity itemEntity = opt.get();
             Item item = itemEntity.toItem();
-            return new ResponseEntity<Item>(item, HttpStatus.OK);
+            return new ResponseEntity<>(item, HttpStatus.OK);
         } else {
             throw new ItemNotFoundException(id);
         }
@@ -82,46 +65,21 @@ public class ItemsEndPoint implements ItemsApi {
     @Override
     public ResponseEntity<Item> putItem(
             Integer id,
-            String name,
-            Sound soundFrotte,
-            List<Sound> soundTape,
-            List<Sound> soundTombe
+            Item item
     ) {
-        Optional<ItemEntity> opt = itemRepository.findById(id);
-        if(opt.isPresent()){
-            ItemEntity itemToUpdate = opt.get();
-            itemToUpdate.setName(name);
-            SoundEntity newSoundFrotte = new SoundEntity();
-            newSoundFrotte.setId(soundFrotte.getId());
-            newSoundFrotte.setSound(soundFrotte.getSound());
-            List<SoundEntity> newSoundTape = new ArrayList<>();
-            for(Sound sound : soundTape){
-                SoundEntity tmpSound = new SoundEntity();
-                tmpSound.setId(sound.getId());
-                tmpSound.setSound(sound.getSound());
-                newSoundTape.add(tmpSound);
-            }
-            List<SoundEntity> newSoundTombe = new ArrayList<>();
-            for(Sound sound : soundTombe){
-                SoundEntity tmpSound = new SoundEntity();
-                tmpSound.setId(sound.getId());
-                tmpSound.setSound(sound.getSound());
-                newSoundTombe.add(tmpSound);
-            }
-            itemToUpdate.setSoundFrotte(newSoundFrotte);
-            itemToUpdate.setSoundsTape(newSoundTape);
-            itemToUpdate.setSoundsTombe(newSoundTombe);
-            itemRepository.save(itemToUpdate);
-            Item updatedItem = new Item();
-            updatedItem.setId(id);
-            updatedItem.setName(name);
-            updatedItem.setSoundFrotte(soundFrotte);
-            updatedItem.setSoundsTombe(soundTombe);
-            updatedItem.setSoundsTape(soundTape);
-            return new ResponseEntity<>(updatedItem, HttpStatus.OK);
-        }else{
-            throw new ItemNotFoundException(id);
+        if(item.getId() != id){
+            throw new InvalidArgumentException();
         }
+        Optional<ItemEntity> optItem = itemRepository.findById(id);
+        ItemEntity itemToUpdate;
+        if(optItem.isPresent()) {
+            itemToUpdate = optItem.get();
+        }else{
+            itemToUpdate = new ItemEntity();
+        }
+        itemToUpdate.fromItem(item);
+        itemRepository.save(itemToUpdate);
+        return new ResponseEntity<>(item, HttpStatus.OK);
     }
 
     @Override
@@ -129,52 +87,24 @@ public class ItemsEndPoint implements ItemsApi {
             Integer id,
             String name,
             Sound soundFrotte,
-            List<Sound> soundTape,
-            List<Sound> soundTombe
+            Sound soundTape,
+            List<Sound> soundsTombe
     ) {
         Optional<ItemEntity> opt = itemRepository.findById(id);
         if(opt.isPresent()){
             ItemEntity itemToUpdate = opt.get();
+            Item responseItem = new Item();
             if(name != null)
-                itemToUpdate.setName(name);
-            if(soundFrotte != null){
-                SoundEntity newSoundFrotte = new SoundEntity();
-                newSoundFrotte.setId(soundFrotte.getId());
-                newSoundFrotte.setSound(soundFrotte.getSound());
-                itemToUpdate.setSoundFrotte(newSoundFrotte);
-            }
-            if(soundTape != null){
-                List<SoundEntity> newSoundTape = new ArrayList<>();
-                for(Sound sound : soundTape){
-                    SoundEntity tmpSound = new SoundEntity();
-                    tmpSound.setId(sound.getId());
-                    tmpSound.setSound(sound.getSound());
-                    newSoundTape.add(tmpSound);
-                }
-                itemToUpdate.setSoundsTape(newSoundTape);
-            }
-            if(soundTombe != null) {
-                List<SoundEntity> newSoundTombe = new ArrayList<>();
-                for (Sound sound : soundTombe) {
-                    SoundEntity tmpSound = new SoundEntity();
-                    tmpSound.setId(sound.getId());
-                    tmpSound.setSound(sound.getSound());
-                    newSoundTombe.add(tmpSound);
-                }
-                itemToUpdate.setSoundsTombe(newSoundTombe);
-            }
+                responseItem.setName(name);
+            if(soundFrotte != null)
+                responseItem.setSoundFrotte(soundFrotte);
+            if(soundTape != null)
+                responseItem.setSoundTape(soundTape);
+            if(soundsTombe != null)
+                responseItem.setSoundsTombe(soundsTombe);
+            itemToUpdate.fromItem(responseItem);
             itemRepository.save(itemToUpdate);
-            Item updatedItem = new Item();
-            updatedItem.setId(itemToUpdate.getId());
-            updatedItem.setName(itemToUpdate.getName());
-            updatedItem.setSoundFrotte(itemToUpdate.getSoundFrotte().toSound());
-            List<Sound> newSoundTape = new ArrayList<>();
-            List<Sound> newSoundTombe = new ArrayList<>();
-            itemToUpdate.getSoundsTape().forEach(sound -> newSoundTape.add(sound.toSound()));
-            itemToUpdate.getSoundsTombe().forEach(sound -> newSoundTombe.add(sound.toSound()));
-            updatedItem.setSoundsTombe(newSoundTombe);
-            updatedItem.setSoundsTape(newSoundTape);
-            return new ResponseEntity<>(updatedItem, HttpStatus.OK);
+            return new ResponseEntity<>(responseItem, HttpStatus.OK);
         }else{
             throw new ItemNotFoundException(id);
         }

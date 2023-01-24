@@ -80,36 +80,14 @@ paths:
           description: id de l'item a mettre a jour
           required: true
           schema:
-              type: integer
-              format: int32
-        - name: name
-          in: query
-          description: nouveau nom de l'item
-          required: true
-          schema:
-            type: string
-        - name: soundFrotte
-          in: query
-          description: son que produit l'item quand on le frotte
-          required: true
-          schema:
-            $ref: '#/components/schemas/Sound'
-        - name: soundTape
-          in: query
-          description: son que produit l'item quand on le tape
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Sound'
-        - name: soundTombe
-          in: query
-          description: son que produit l'item en tombant
-          required: true
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Sound'
+            type: integer
+            format: int32
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
       responses:
         '200':
           description: OK
@@ -150,10 +128,8 @@ paths:
           description: son que produit l'item quand on le tape
           required: false
           schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Sound'
-        - name: soundTombe
+            $ref: '#/components/schemas/Sound'
+        - name: soundsTombe
           in: query
           description: son que produit l'item en tombant
           required: false
@@ -186,11 +162,8 @@ components:
           type: string
         soundFrotte:
           $ref: '#/components/schemas/Sound'
-        soundsTape:
-          description: sons que l'item produit quand on le tape
-          type: array
-          items:
-            $ref: '#/components/schemas/Sound'
+        soundTape:
+          $ref: '#/components/schemas/Sound'
         soundsTombe:
           description: sons que l'item produit quand il tombe
           type: array
@@ -208,6 +181,4 @@ components:
         sound:
           description: onomatopee representant le son
           type: string
-        item:
-          $ref: '#/components/schemas/Item'
       title: Sound

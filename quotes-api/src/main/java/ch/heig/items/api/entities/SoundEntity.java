@@ -16,8 +16,8 @@ public class SoundEntity {
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "genSounds")
     private int id;
     private String sound;
-    @ManyToOne @JoinColumn(name="idItem", nullable=false)
-    private ItemEntity item;
+//    @ManyToOne @JoinColumn(name="idItem", nullable=true)
+//    private ItemEntity item;
 
     public int getId() {
         return id;
@@ -39,7 +39,12 @@ public class SoundEntity {
         Sound sound = new Sound();
         sound.setSound(this.sound);
         sound.setId(this.id);
-        sound.setItem(this.item.toItem());
         return sound;
+    }
+
+    public SoundEntity fromSound(Sound sound) {
+        this.id = sound.getId();
+        this.sound = sound.getSound();
+        return this;
     }
 }
