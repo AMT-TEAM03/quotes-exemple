@@ -72,7 +72,7 @@ paths:
     put:
       tags:
         - Items-end-point
-      summary: Mets a jour un item
+      summary: Ajoute ou mets a jour un item
       operationId: putItem
       parameters:
         - name: id
