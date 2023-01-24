@@ -97,8 +97,12 @@ public class ItemEntity {
     public ItemEntity fromItem(Item item){
         this.id = item.getId();
         this.name = item.getName();
-        this.soundFrotte = new SoundEntity().fromSound(item.getSoundFrotte());
-        this.soundTape = new SoundEntity().fromSound(item.getSoundTape());
+        this.soundFrotte = item.getSoundFrotte() != null ?
+                new SoundEntity().fromSound(item.getSoundFrotte()) :
+                null;
+        this.soundTape = item.getSoundTape() != null ?
+                new SoundEntity().fromSound(item.getSoundTape()) :
+                null;
         List<SoundEntity> newSoundsTombe = new ArrayList<>();
         for(Sound sound : item.getSoundsTombe()){
             newSoundsTombe.add(new SoundEntity().fromSound(sound));

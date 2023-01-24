@@ -1,7 +1,6 @@
 package ch.heig.items.api.endpoints;
 
 import ch.heig.items.api.entities.ItemEntity;
-import ch.heig.items.api.entities.SoundEntity;
 import ch.heig.items.api.exceptions.InvalidArgumentException;
 import ch.heig.items.api.exceptions.ItemNotFoundException;
 import ch.heig.items.api.repositories.ItemRepository;
@@ -67,18 +66,24 @@ public class ItemsEndPoint implements ItemsApi {
             Integer id,
             Item item
     ) {
+        System.out.println("PUT Lessgoooo");
         if(item.getId() != id){
             throw new InvalidArgumentException();
         }
+        System.out.println("ID is the same we good");
         Optional<ItemEntity> optItem = itemRepository.findById(id);
         ItemEntity itemToUpdate;
         if(optItem.isPresent()) {
+            System.out.println("Exists, we update");
             itemToUpdate = optItem.get();
         }else{
+            System.out.println("Doesn't exist, we create");
             itemToUpdate = new ItemEntity();
         }
         itemToUpdate.fromItem(item);
+        System.out.println("We save the item!");
         itemRepository.save(itemToUpdate);
+        System.out.println("We respond");
         return new ResponseEntity<>(item, HttpStatus.OK);
     }
 
