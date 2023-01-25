@@ -9,6 +9,21 @@ tags:
   - name: Items-end-point
     description: Gestion des items
 paths:
+  /sounds:
+    get:
+      tags:
+        - Sounds-end-point
+      summary: Obtient une liste de tous les sons
+      operationId: getSounds
+      responses:
+        '200':
+          description: OK
+          content:
+            'application/json':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Sound'
   /items:
     get:
       tags:
@@ -72,7 +87,7 @@ paths:
     put:
       tags:
         - Items-end-point
-      summary: Mets a jour un item
+      summary: Ajoute ou mets a jour un item
       operationId: putItem
       parameters:
         - name: id
