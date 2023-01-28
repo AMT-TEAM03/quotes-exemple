@@ -95,8 +95,12 @@ public class ItemEntity {
     }
 
     public ItemEntity fromItem(Item item){
-        this.id = item.getId();
-        this.name = item.getName();
+        if(item.getId() != null){
+            this.id = item.getId();
+        }
+        if(name != null){
+            this.name = item.getName();
+        }
         this.soundFrotte = item.getSoundFrotte() != null ?
                 new SoundEntity().fromSound(item.getSoundFrotte()) :
                 null;
@@ -104,8 +108,10 @@ public class ItemEntity {
                 new SoundEntity().fromSound(item.getSoundTape()) :
                 null;
         List<SoundEntity> newSoundsTombe = new ArrayList<>();
-        for(Sound sound : item.getSoundsTombe()){
-            newSoundsTombe.add(new SoundEntity().fromSound(sound));
+        if(item.getSoundsTombe() != null){
+            for(Sound sound : item.getSoundsTombe()){
+                newSoundsTombe.add(new SoundEntity().fromSound(sound));
+            }
         }
         this.soundsTombe = newSoundsTombe;
         return this;

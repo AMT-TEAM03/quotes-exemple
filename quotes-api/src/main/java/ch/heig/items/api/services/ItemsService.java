@@ -36,11 +36,14 @@ public class ItemsService {
     }
 
     public Item add(Item item){
-        Optional<ItemEntity> alreadyExist = itemRepository.findById(item.getId());
-        if(alreadyExist.isPresent()){
-            throw new InvalidArgumentException();
+        if(item.getId() != null){
+            Optional<ItemEntity> alreadyExist = itemRepository.findById(item.getId());
+            if(alreadyExist.isPresent()){
+                throw new InvalidArgumentException();
+            }
+        }else{
+            itemRepository.save(new ItemEntity().fromItem(item));
         }
-        itemRepository.save(new ItemEntity().fromItem(item));
         return item;
     }
 
