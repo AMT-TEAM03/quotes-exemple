@@ -23,6 +23,7 @@ public class ItemSteps {
     private Item item;
     private int statusCode;
     private List<Item> items;
+    private List<Integer> createdItems = new ArrayList<>();
 
     @Given("I have an item with the id:{int} and the name:{word}")
     public void i_have_an_item(int idItem, String nameItem) throws Throwable{
@@ -104,5 +105,27 @@ public class ItemSteps {
             }
         }
         assertEquals(found, true);
+    }
+
+    @When("I delete {int}")
+    public void i_delete(int id){
+        try{
+            ApiResponse response = itemApi.deleteItemWithHttpInfo(id);
+            statusCode = response.getStatusCode();
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+        }
+    }
+
+    @Then("I expect id:{int} to be deleted")
+    public void i_expect_to_be_delete(int id){
+        boolean found = false;
+        for(Item currentItem : items){
+            if(currentItem.getId() == id){
+                found = true;
+                break;
+            }
+        }
+        assertEquals(found, false);
     }
 }

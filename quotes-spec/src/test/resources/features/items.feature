@@ -28,5 +28,8 @@ Scenario: Update an item with PATCH
   When I fetch all the items
   Then I expect id:1 name:OhHello to be part of the response
 
-#Scenario: I delete the items created and expect them to be gone
-#  When I delete 11 and 1500
+Scenario: I delete the item 1 and expect it to be gone
+  When I delete 1
+  Then I receive a 200 status code
+  When I fetch all the items
+  Then I expect id:1 to be deleted

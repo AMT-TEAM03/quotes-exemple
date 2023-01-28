@@ -132,6 +132,25 @@ paths:
         '404':
           description: Not Found
       deprecated: false
+    delete:
+      tags:
+        - Items-end-point
+      summary: Delete un item
+      operationId: deleteItem
+      parameters:
+        - name: id
+          in: path
+          description: numéro de l'item à supprimer
+          required: true
+          schema:
+            type: integer
+            format: int32
+      responses:
+        '200':
+          description: OK
+        '404':
+          description: Not Found
+      deprecated: false
 components:
   schemas:
     Item:

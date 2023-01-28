@@ -6,7 +6,6 @@ import ch.heig.items.api.exceptions.ItemNotFoundException;
 import ch.heig.items.api.repositories.ItemRepository;
 import ch.heig.items.api.utils.Tuple;
 import org.openapitools.model.Item;
-import org.openapitools.model.Sound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -97,5 +96,13 @@ public class ItemsService {
         itemToUpdate.fromItem(responseItem);
         itemRepository.save(itemToUpdate);
         return responseItem;
+    }
+
+    public void delete(Integer id){
+        Optional<ItemEntity> opt = itemRepository.findById(id);
+        if(!opt.isPresent()) {
+            throw new ItemNotFoundException(id);
+        }
+        itemRepository.delete(opt.get());
     }
 }

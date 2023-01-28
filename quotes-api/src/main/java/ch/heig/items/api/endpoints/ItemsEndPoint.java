@@ -1,12 +1,10 @@
 package ch.heig.items.api.endpoints;
 
-import ch.heig.items.api.exceptions.InvalidArgumentException;
 import ch.heig.items.api.exceptions.ItemNotFoundException;
 import ch.heig.items.api.services.ItemsService;
 import ch.heig.items.api.utils.Tuple;
 import org.openapitools.api.ItemsApi;
 import org.openapitools.model.Item;
-import org.openapitools.model.Sound;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,5 +64,11 @@ public class ItemsEndPoint implements ItemsApi {
     ) {
         Item responseItem = itemService.update(item);
         return new ResponseEntity<>(responseItem, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteItem(Integer id){
+        itemService.delete(id);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
