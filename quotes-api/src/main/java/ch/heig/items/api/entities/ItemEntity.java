@@ -19,7 +19,7 @@ public class ItemEntity {
             allocationSize = 100)
     @Id // @GeneratedValue
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "genItems")
-    private int id;
+    private Integer id;
     private String name;
 
     @OneToOne @JoinColumn(name = "id")
@@ -78,7 +78,9 @@ public class ItemEntity {
 
     public Item toItem(){
         Item item = new Item();
-        item.setId(this.id);
+        if(this.id != null){
+            item.setId(this.id);
+        }
         item.setName(this.name);
         if(this.soundFrotte != null){
             item.setSoundFrotte(this.soundFrotte.toSound());
@@ -95,8 +97,12 @@ public class ItemEntity {
     }
 
     public ItemEntity fromItem(Item item){
-        this.id = item.getId();
-        this.name = item.getName();
+        if(item.getId() != null){
+            this.id = item.getId();
+        }
+        if(item.getName() != null){
+            this.name = item.getName();
+        }
         this.soundFrotte = item.getSoundFrotte() != null ?
                 new SoundEntity().fromSound(item.getSoundFrotte()) :
                 null;
@@ -104,8 +110,10 @@ public class ItemEntity {
                 new SoundEntity().fromSound(item.getSoundTape()) :
                 null;
         List<SoundEntity> newSoundsTombe = new ArrayList<>();
-        for(Sound sound : item.getSoundsTombe()){
-            newSoundsTombe.add(new SoundEntity().fromSound(sound));
+        if(item.getSoundsTombe() != null){
+            for(Sound sound : item.getSoundsTombe()){
+                newSoundsTombe.add(new SoundEntity().fromSound(sound));
+            }
         }
         this.soundsTombe = newSoundsTombe;
         return this;
