@@ -1,3 +1,13 @@
+# Définition du sujet
+Nous avons décidé de partir sur 2 tables. La première contient des objets, et la seconde contient des sons. 
+Les objets peuvent posséder des sons pour plusieurs actions différentes et peuvent être créés et modifiés au travers de 
+l'API. Les son eux ne peuvent pas être créés au travers de l'API et doivent forcéments être créés depuis le code source. 
+Nous avons décidé qu'il s'agissait d'une action qui ne devait pas être accessible à tous, et comme il ne nous était pas 
+demandé d'implémenter de sécurités sur l'API, nous avons choisi la méthod la plus simple.
+
+# Vidéo explicative du projet
+<i>[A venir](https://www.youtube.com/watch?v=dQw4w9WgXcQ)</i>
+
 # quotes-exemple
 Mise en oeuvre d'une api avec Springboot et d'un client de test BDD avec Cucumber 
 Avec OpenApi generator, génération à partir d'un fichier OpenAPI "quotes.yaml" :
