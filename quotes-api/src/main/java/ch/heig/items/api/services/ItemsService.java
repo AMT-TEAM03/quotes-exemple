@@ -4,6 +4,7 @@ import ch.heig.items.api.entities.ItemEntity;
 import ch.heig.items.api.exceptions.InvalidArgumentException;
 import ch.heig.items.api.exceptions.ItemNotFoundException;
 import ch.heig.items.api.repositories.ItemRepository;
+import ch.heig.items.api.utils.Tuple;
 import org.openapitools.model.Item;
 import org.openapitools.model.Sound;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,47 +41,59 @@ public class ItemsService {
             Optional<ItemEntity> alreadyExist = itemRepository.findById(item.getId());
             if(alreadyExist.isPresent()){
                 throw new InvalidArgumentException();
+            }else{
+                item.setId(null);
             }
-        }else{
-            itemRepository.save(new ItemEntity().fromItem(item));
         }
+        itemRepository.save(new ItemEntity().fromItem(item));
         return item;
     }
 
-    public Item addOrUpdate(Item item){
-        Optional<ItemEntity> optItem = itemRepository.findById(item.getId());
+    public Tuple<Item, Boolean> addOrUpdate(Item item){
         ItemEntity itemToUpdate;
-        if(optItem.isPresent()) {
-            itemToUpdate = optItem.get();
+        Boolean newItem;
+        if(item.getId() != null){
+            Optional<ItemEntity> optItem = itemRepository.findById(item.getId());
+            if(optItem.isPresent()) {
+                newItem = false;
+                itemToUpdate = optItem.get();
+            }else{
+                // To automatically generate id
+                // We don't want the user to be able to choose the id
+                item.setId(null);
+                newItem = true;
+                itemToUpdate = new ItemEntity();
+            }
         }else{
+            newItem = true;
             itemToUpdate = new ItemEntity();
         }
         itemToUpdate.fromItem(item);
-        itemRepository.save(itemToUpdate);
-        return itemToUpdate.toItem();
+        itemToUpdate = itemRepository.save(itemToUpdate);
+        return new Tuple<>(itemToUpdate.toItem(), newItem);
     }
 
     public Item update(
-            Integer id,
-            String name,
-            Sound soundFrotte,
-            Sound soundTape,
-            List<Sound> soundsTombe
+            Item item
     ){
-        Optional<ItemEntity> opt = itemRepository.findById(id);
+        if(item.getId() == null){
+            throw new InvalidArgumentException();
+        }
+        Optional<ItemEntity> opt = itemRepository.findById(item.getId());
         if(!opt.isPresent()) {
-            throw new ItemNotFoundException(id);
+            throw new ItemNotFoundException(item.getId());
         }
         ItemEntity itemToUpdate = opt.get();
         Item responseItem = new Item();
-        if(name != null)
-            responseItem.setName(name);
-        if(soundFrotte != null)
-            responseItem.setSoundFrotte(soundFrotte);
-        if(soundTape != null)
-            responseItem.setSoundTape(soundTape);
-        if(soundsTombe != null)
-            responseItem.setSoundsTombe(soundsTombe);
+        responseItem.setId(itemToUpdate.getId());
+        if(item.getName() != null)
+            responseItem.setName(item.getName());
+        if(item.getSoundFrotte() != null)
+            responseItem.setSoundFrotte(item.getSoundFrotte());
+        if(item.getSoundTape() != null)
+            responseItem.setSoundTape(item.getSoundTape());
+        if(item.getSoundsTombe() != null)
+            responseItem.setSoundsTombe(item.getSoundsTombe());
         itemToUpdate.fromItem(responseItem);
         itemRepository.save(itemToUpdate);
         return responseItem;

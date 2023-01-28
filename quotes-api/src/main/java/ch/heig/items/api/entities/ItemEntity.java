@@ -19,7 +19,7 @@ public class ItemEntity {
             allocationSize = 100)
     @Id // @GeneratedValue
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "genItems")
-    private int id;
+    private Integer id;
     private String name;
 
     @OneToOne @JoinColumn(name = "id")
@@ -78,7 +78,9 @@ public class ItemEntity {
 
     public Item toItem(){
         Item item = new Item();
-        item.setId(this.id);
+        if(this.id != null){
+            item.setId(this.id);
+        }
         item.setName(this.name);
         if(this.soundFrotte != null){
             item.setSoundFrotte(this.soundFrotte.toSound());
@@ -98,7 +100,7 @@ public class ItemEntity {
         if(item.getId() != null){
             this.id = item.getId();
         }
-        if(name != null){
+        if(item.getName() != null){
             this.name = item.getName();
         }
         this.soundFrotte = item.getSoundFrotte() != null ?

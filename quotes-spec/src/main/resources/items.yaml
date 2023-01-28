@@ -60,21 +60,24 @@ paths:
               schema:
                 type: string
                 format: uri
-  /items/{id}:
-    get:
+    put:
       tags:
         - Items-end-point
-      summary: Obtient un item
-      operationId: getItem
-      parameters:
-        - name: id
-          in: path
-          description: numéro de l'item à obtenir
-          required: true
-          schema:
-            type: integer
-            format: int32
+      summary: Ajoute ou mets a jour un item
+      operationId: putItem
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Item'
       responses:
+        '201':
+          description: CREATED
+          content:
+            'application/json':
+              schema:
+                $ref: '#/components/schemas/Item'
         '200':
           description: OK
           content:
@@ -84,19 +87,11 @@ paths:
         '404':
           description: Not Found
       deprecated: false
-    put:
+    patch:
       tags:
         - Items-end-point
-      summary: Ajoute ou mets a jour un item
-      operationId: putItem
-      parameters:
-        - name: id
-          in: path
-          description: id de l'item a mettre a jour
-          required: true
-          schema:
-            type: integer
-            format: int32
+      summary: Mets a jour un item
+      operationId: patchItem
       requestBody:
         required: true
         content:
@@ -113,45 +108,20 @@ paths:
         '404':
           description: Not Found
       deprecated: false
-    patch:
+  /items/{id}:
+    get:
       tags:
         - Items-end-point
-      summary: Mets a jour un item
-      operationId: patchItem
+      summary: Obtient un item
+      operationId: getItem
       parameters:
         - name: id
           in: path
-          description: id de l'item a mettre a jour
+          description: numéro de l'item à obtenir
           required: true
           schema:
             type: integer
             format: int32
-        - name: name
-          in: query
-          description: nouveau nom de l'item
-          required: false
-          schema:
-            type: string
-        - name: soundFrotte
-          in: query
-          description: son que produit l'item quand on le frotte
-          required: false
-          schema:
-            $ref: '#/components/schemas/Sound'
-        - name: soundTape
-          in: query
-          description: son que produit l'item quand on le tape
-          required: false
-          schema:
-            $ref: '#/components/schemas/Sound'
-        - name: soundsTombe
-          in: query
-          description: son que produit l'item en tombant
-          required: false
-          schema:
-            type: array
-            items:
-              $ref: '#/components/schemas/Sound'
       responses:
         '200':
           description: OK

@@ -6,8 +6,11 @@ import io.cucumber.java.en.When;
 import org.openapitools.client.ApiException;
 import org.openapitools.client.ApiResponse;
 import org.openapitools.client.api.ItemsEndPointApi;
+import org.openapitools.client.api.SoundsEndPointApi;
 import org.openapitools.client.model.Item;
+import org.openapitools.client.model.Sound;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,22 +18,58 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ItemSteps {
 
-    private final ItemsEndPointApi api = new ItemsEndPointApi();
+    private final ItemsEndPointApi itemApi = new ItemsEndPointApi();
+    private final SoundsEndPointApi soundApi = new SoundsEndPointApi();
     private Item item;
     private int statusCode;
     private List<Item> items;
 
-    @Given("I have an item with the id:{int}")
-    public void i_have_an_item_without_sounds(int idItem) throws Throwable{
+    @Given("I have an item with the id:{int} and the name:{word}")
+    public void i_have_an_item(int idItem, String nameItem) throws Throwable{
         item = new Item();
         item.setId(idItem);
-        item.setName("Marteau");
+        item.setName(nameItem);
+        // Set random sounds
+        ApiResponse response = soundApi.getSoundsWithHttpInfo();
+        List<Sound> existingSounds = (List<Sound>) response.getData();
+        int randomIndex = (int) (Math.random() * existingSounds.size());
+        item.setSoundTape(existingSounds.get(randomIndex));
+        List<Sound> soundsTombe = new ArrayList<>();
+        for(int i = 0; i < 3; i++){
+            int newRandomIndex = randomIndex;
+            while(randomIndex == newRandomIndex){
+                newRandomIndex = (int) (Math.random() * existingSounds.size());
+            }
+            randomIndex = newRandomIndex;
+            soundsTombe.add(existingSounds.get(randomIndex));
+        }
+        item.setSoundsTombe(soundsTombe);
     }
 
     @When("I POST it to the items endpoint")
     public void i_POST_it_to_the_items_endpoint() throws Throwable{
         try{
-            ApiResponse response = api.addItemWithHttpInfo(item);
+            ApiResponse response = itemApi.addItemWithHttpInfo(item);
+            statusCode = response.getStatusCode();
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+        }
+    }
+
+    @When("I PUT it to the items endpoint")
+    public void i_PUT_it_to_the_items_endpoint() throws Throwable{
+        try{
+            ApiResponse response = itemApi.putItemWithHttpInfo(item);
+            statusCode = response.getStatusCode();
+        } catch (ApiException e) {
+            statusCode = e.getCode();
+        }
+    }
+
+    @When("I PATCH it to the items endpoint")
+    public void i_PATCH_it_to_the_items_endpoint() throws Throwable{
+        try{
+            ApiResponse response = itemApi.patchItemWithHttpInfo(item);
             statusCode = response.getStatusCode();
         } catch (ApiException e) {
             statusCode = e.getCode();
@@ -45,7 +84,7 @@ public class ItemSteps {
     @When("I fetch all the items")
     public void i_fetch_all_the_items() throws Throwable {
         try{
-            ApiResponse response = api.getItemsWithHttpInfo();
+            ApiResponse response = itemApi.getItemsWithHttpInfo();
             statusCode = response.getStatusCode();
             items = (List<Item>) response.getData();
         }catch(ApiException e){
@@ -53,14 +92,17 @@ public class ItemSteps {
         }
     }
 
-    @Then("I expect id:{int} to be part of the reponse")
-    public void i_expect_id_in_response(int id){
+    @Then("I expect id:{int} name:{word} to be part of the response")
+    public void i_expect_id_in_response(int id, String name){
         boolean found = false;
-        for(Item item : items){
-            if(item.getId() == id){
-                found = true;
+        for(Item currentItem : items){
+            if(currentItem.getId() == id){
+                if(currentItem.getName().equals(name)){
+                    found = true;
+                }
+                break;
             }
         }
-        assert found;
+        assertEquals(found, true);
     }
 }
