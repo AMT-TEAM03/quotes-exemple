@@ -2,10 +2,12 @@
 Nous avons décidé de partir sur 2 tables. La première contient des objets, et la seconde contient des sons.  
 Les objets peuvent posséder des sons pour plusieurs actions différentes et peuvent être créés et modifiés au travers de 
 l'API.  
+
 Les son eux ne peuvent pas être créés au travers de l'API et doivent forcéments être créés depuis le code source. 
-Nous avons décidé qu'il s'agissait d'une action qui ne devait pas être accessible à tous, et comme il ne nous était pas 
-demandé d'implémenter de gestion de sécurité sur l'API, nous avons choisi la méthode la plus simple, c'est à dire de ne 
-pas mettre d'endpoint pour modifier les sons et que le seul moyen d'ajouter/supprimer  que dans le code source.
+Nous avons pris cette décision car notre "métier" est la gestion des objets, nous partons donc du principe que ce n'est 
+pas à nous de gérer les sons.
+
+
 
 # Vidéo explicative du projet
 <i>[A venir](https://www.youtube.com/watch?v=dQw4w9WgXcQ)</i>
