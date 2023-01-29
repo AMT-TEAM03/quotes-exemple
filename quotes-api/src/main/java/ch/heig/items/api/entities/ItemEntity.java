@@ -25,8 +25,6 @@ public class ItemEntity {
     @OneToOne @JoinColumn(name = "id")
     private SoundEntity soundFrotte;
 
-//    @OneToMany(targetEntity = SoundEntity.class, mappedBy = "item")
-//    private List<SoundEntity> soundsTape = new ArrayList<>();
     @ManyToOne @JoinTable(name = "ITEMS_SOUNDS_TAPE_ASSOCIATION",
             joinColumns = @JoinColumn( name = "idItem" ),
             inverseJoinColumns = @JoinColumn( name = "idSound" ))
