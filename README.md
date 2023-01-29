@@ -7,7 +7,26 @@ Les son eux ne peuvent pas être créés au travers de l'API et doivent forcéme
 Nous avons pris cette décision car notre "métier" est la gestion des objets, nous partons donc du principe que ce n'est 
 pas à nous de gérer les sons.
 
+# UML de la DB
 
+![image](.\res\UML_NotTransparent.drawio.png)
+
+# Description des Endpoints
+
+Pour savoir ce que nécessite les requêtes aux endpoints, se référer soit à la doc accessible après avoir lancé le projet quotes-exemple, à l'adresse http://localhost:9090/api par défaut, soit à la vidéo ci-dessous pour des exemples d'utilisation avec Postman.
+
+## Endpoints pour les items
+
+- GET /items : Permet de récupérer la liste de tous les items présents dans la DB Items.
+- PUT /items : Permet de créer, ou s'il existe déjà un item avec cet id, d'écraser cet item dans la DB.
+- POST /items : Création d'un nouvel item dans la DB. Echoue si l'item existe déjà
+- PATCH /items : Modification d'un item dans la DB. Echoue si l'item n'existe pas
+- GET /items/{id} : Récupère un item spécifique dans la DB.
+- DELETE /items/{id} : Supprime un item spécifique dans la DB.
+
+## Endpoint pour les sons
+
+- GET /sounds : Récupère la liste des sons stockés dans la DB Sounds.
 
 # Vidéo explicative du projet
 <i>[A venir](https://www.youtube.com/watch?v=dQw4w9WgXcQ)</i>
@@ -17,7 +36,7 @@ Mise en oeuvre d'une api avec Springboot et d'un client de test BDD avec Cucumbe
 Avec OpenApi generator, génération à partir d'un fichier OpenAPI "quotes.yaml" :
  - des intertaces et des DTO pour Springboot
  - d'un client et des DTO pour le client BDD
- 
+
  ## Installation et utilisation avec IntelliJ
   - git clone de ce repository et import sous IntelliJ du projet (maven) qui contient 2 modules : quotes-api pour Springboot
  et quotes-spec pour le client BDD
@@ -35,7 +54,7 @@ Avec OpenApi generator, génération à partir d'un fichier OpenAPI "quotes.yaml
     si Springboot tourne, les tests BDD doivent s'exécuter sans erreurs au cours de l'exécution de Maven
   - Déclaration "Generated Source Root" du dossier target/generated-sources/openapi/src/main/java 
   - La Feature Cucumber du dossier src/test/resources/features/quotes.feature doit être exécutable sous IntelliJ
-  
+
   ## Cycle de développement
   - Modifier le fichier OpenAPI "quotes.yaml" sous src/main/resource des 2 projets (copies identiques)
   - Api Springboot
@@ -48,5 +67,3 @@ Avec OpenApi generator, génération à partir d'un fichier OpenAPI "quotes.yaml
     - Relancer "maven clean package" de quotes-spec, les tests seront peut-être en erreur et peuvent être skippés
     - Développer ou adapter les features Cucumber et les steps pour les nouvelles fonctionalités
     - Exécuter les tests sous IntelliJ et relancer "maven clean package" de quotes-spec pour exécuter les tests avec Maven
-  
-    
