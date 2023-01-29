@@ -9,7 +9,7 @@ pas à nous de gérer les sons.
 
 # UML de la DB
 
-![image](.\res\UML_NotTransparent.drawio.png)
+![image](./res/UML_NotTransparent.drawio.png)
 
 # Description des Endpoints
 
