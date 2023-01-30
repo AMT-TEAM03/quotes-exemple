@@ -29,7 +29,7 @@ Pour savoir ce que nécessite les requêtes aux endpoints, se référer soit à 
 - GET /sounds : Récupère la liste des sons stockés dans la DB Sounds.
 
 # Vidéo explicative du projet
-[A venir]()
+[Video du laboratoire](https://youtu.be/lBsmF8sVJHw)
 
 # quotes-exemple
 Mise en oeuvre d'une api avec Springboot et d'un client de test BDD avec Cucumber 
